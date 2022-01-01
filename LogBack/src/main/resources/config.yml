@@ -1,5 +1,5 @@
 # DO NOT CHANGE MANUALLY!
-version: 1
+version: 2
 
 # Available: "en_US", "zh_CN"
 language: "en_US"
@@ -8,4 +8,4 @@ language: "en_US"
 notify: true
 
 # Use the Minecraft spawn point instead of the spawn point set by "/logback setspawn"
-useServerSpawnPoint: false
+useMinecraftSpawnPoint: false

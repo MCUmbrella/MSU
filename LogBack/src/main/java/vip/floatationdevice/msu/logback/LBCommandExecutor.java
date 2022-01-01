@@ -27,7 +27,7 @@ public class LBCommandExecutor implements Listener, CommandExecutor
                 {
                     if(DataManager.isRecorded(((Player)sender).getUniqueId()))
                     {
-                        ((Player)sender).teleport(DataManager.readLocation(((Player)sender).getUniqueId()), PlayerTeleportEvent.TeleportCause.COMMAND);
+                        ((Player)sender).teleport(DataManager.readLocation(((Player)sender).getUniqueId()), PlayerTeleportEvent.TeleportCause.PLUGIN);
                         sender.sendMessage(translate("logback-success"));
                         DataManager.removeLocation(((Player)sender).getUniqueId());
                         return true;
@@ -41,7 +41,9 @@ public class LBCommandExecutor implements Listener, CommandExecutor
                 catch(Exception e)
                 {
                     sender.sendMessage(translate("err-logback-fail"));
-                    LogBack.instance.getLogger().severe("Failed to teleport player "+((Player)sender).getName()+": "+e);
+                    LogBack.instance.getLogger().severe(translate("err-logback-fail-console")
+                            .replace("{0}",sender.getName())
+                            .replace("{1}",e.toString()));
                     return false;
                 }
             }
