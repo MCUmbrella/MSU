@@ -1,0 +1,7 @@
+name: Spawn
+version: '${project.version}'
+main: vip.floatationdevice.msu.spawn.Spawn
+api-version: 1.13
+authors: [ MCUmbrella ]
+description: Teleport to server spawn point
+website: https://github.com/MCUmbrella/MSU/tree/main/Spawn
