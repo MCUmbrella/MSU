@@ -10,17 +10,20 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 import static vip.floatationdevice.msu.logback.I18nUtil.*;
 
 public final class LogBack extends JavaPlugin implements Listener
 {
     public static LogBack instance;
-    LBCommandExecutor lb;
+    public static Logger log;
 
     @Override
     public void onEnable()
     {
-        getLogger().info("Initializing");
+        log=getLogger();
+        log.info("Initializing");
         instance=this;
         getServer().getPluginManager().registerEvents(this,this);
         try
@@ -28,18 +31,17 @@ public final class LogBack extends JavaPlugin implements Listener
             ConfigManager.initialize();
             setLanguage(ConfigManager.getLanguage());
             this.setEnabled(true);
-            lb=new LBCommandExecutor();
-            getCommand("logback").setExecutor(lb);
-            getLogger().info("Initialization complete");
+            getCommand("logback").setExecutor(new LBCommandExecutor());
+            log.info("Initialization complete");
         }
         catch (Exception e)
         {
-            getLogger().severe("Initialization failed");
+            log.severe("Initialization failed");
             e.printStackTrace();
             getServer().getPluginManager().disablePlugin(this);
         }
         if(!ConfigManager.useMinecraftSpawnPoint() && !DataManager.isSpawnSet())
-            getLogger().warning(translate("warn-spawn-not-set"));
+            log.warning(translate("warn-spawn-not-set"));
     }
 
     @Override
@@ -53,7 +55,7 @@ public final class LogBack extends JavaPlugin implements Listener
     {
         if(!ConfigManager.useMinecraftSpawnPoint() && !DataManager.isSpawnSet())
         {
-            getLogger().warning(translate("warn-spawn-not-set"));
+            log.warning(translate("warn-spawn-not-set"));
             return;
         }
         Player p=e.getPlayer();
@@ -66,7 +68,7 @@ public final class LogBack extends JavaPlugin implements Listener
         catch (Exception ex)
         {
             spawn=getServer().getWorlds().get(0).getSpawnLocation();
-            getLogger().severe(translate("err-read-spawn-fail").replace("{0}",ex.toString()));
+            log.severe(translate("err-read-spawn-fail").replace("{0}",ex.toString()));
         }
         Bukkit.getScheduler().runTaskAsynchronously(this,new Runnable(){
             @Override public void run()
@@ -77,7 +79,7 @@ public final class LogBack extends JavaPlugin implements Listener
                 }
                 catch(Exception ex)
                 {
-                    getLogger().severe(translate("err-write-location-fail")
+                    log.severe(translate("err-write-location-fail")
                             .replace("{0}",p.getName())
                             .replace("{1}",ex.toString()));
                 }
@@ -91,7 +93,7 @@ public final class LogBack extends JavaPlugin implements Listener
     {
         if(!ConfigManager.useMinecraftSpawnPoint() && !DataManager.isSpawnSet())
         {
-            getLogger().warning(translate("warn-spawn-not-set"));
+            log.warning(translate("warn-spawn-not-set"));
             return;
         }
         Player p=e.getPlayer();
@@ -105,7 +107,7 @@ public final class LogBack extends JavaPlugin implements Listener
             catch (Exception ex)
             {
                 spawn=getServer().getWorlds().get(0).getSpawnLocation();
-                getLogger().severe(translate("err-read-spawn-fail"));
+                log.severe(translate("err-read-spawn-fail"));
             }
             p.teleport(spawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
             return;

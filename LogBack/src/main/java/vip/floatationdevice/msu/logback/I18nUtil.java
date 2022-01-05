@@ -12,13 +12,13 @@ public class I18nUtil
 
     public static void setLanguage(String language)
     {
-        LogBack.instance.getLogger().info("Loading translations");
+        LogBack.log.info("Loading translations");
         if (language == null || language.equals("")) return;
         lang = language;
         File langFile = new File(LogBack.instance.getDataFolder(), "lang_" + lang + ".yml");
         if (!langFile.exists()) LogBack.instance.saveResource("lang_" + lang + ".yml", false);
         l = YamlConfiguration.loadConfiguration(langFile);
-        LogBack.instance.getLogger().info("Language: " + translate("language") + " by " + translate("language-file-contributor"));
+        LogBack.log.info("Language: " + translate("language") + " by " + translate("language-file-contributor"));
     }
 
     public static String translate(String key)

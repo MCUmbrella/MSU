@@ -11,12 +11,12 @@ public class ConfigManager
     protected static YamlConfiguration cfg;
     protected static void initialize() throws Exception
     {
-        LogBack.instance.getLogger().info("Loading configurations");
+        LogBack.log.info("Loading configurations");
         File cfgFile = new File(LogBack.instance.getDataFolder(), "config.yml");
         if (!cfgFile.exists()) LogBack.instance.saveResource("config.yml", false);
         cfg=YamlConfiguration.loadConfiguration(cfgFile);
         if(getConfigVersion()!=CONFIG_VERSION) throw new InvalidConfigurationException("Incorrect configuration version");
-        LogBack.instance.getLogger().info("Configurations loaded");
+        LogBack.log.info("Configurations loaded");
     }
     protected static int getConfigVersion(){return cfg.getInt("version");}
     protected static String getLanguage(){return cfg.getString("language");}

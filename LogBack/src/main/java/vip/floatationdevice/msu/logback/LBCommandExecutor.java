@@ -23,27 +23,35 @@ public class LBCommandExecutor implements Listener, CommandExecutor
         {
             case 0:
             {
-                try
+                if(sender.hasPermission("logback.logback"))
                 {
-                    if(DataManager.isRecorded(((Player)sender).getUniqueId()))
+                    try
                     {
-                        ((Player)sender).teleport(DataManager.readLocation(((Player)sender).getUniqueId()), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                        sender.sendMessage(translate("logback-success"));
-                        DataManager.removeLocation(((Player)sender).getUniqueId());
-                        return true;
+                        if(DataManager.isRecorded(((Player)sender).getUniqueId()))
+                        {
+                            ((Player)sender).teleport(DataManager.readLocation(((Player)sender).getUniqueId()), PlayerTeleportEvent.TeleportCause.PLUGIN);
+                            sender.sendMessage(translate("logback-success"));
+                            DataManager.removeLocation(((Player)sender).getUniqueId());
+                            return true;
+                        }
+                        else
+                        {
+                            sender.sendMessage(translate("err-no-record"));
+                            return false;
+                        }
                     }
-                    else
+                    catch(Exception e)
                     {
-                        sender.sendMessage(translate("err-no-record"));
+                        sender.sendMessage(translate("err-logback-fail"));
+                        LogBack.log.severe(translate("err-logback-fail-console")
+                                .replace("{0}",sender.getName())
+                                .replace("{1}",e.toString()));
                         return false;
                     }
                 }
-                catch(Exception e)
+                else
                 {
-                    sender.sendMessage(translate("err-logback-fail"));
-                    LogBack.instance.getLogger().severe(translate("err-logback-fail-console")
-                            .replace("{0}",sender.getName())
-                            .replace("{1}",e.toString()));
+                    sender.sendMessage(translate("err-permission-denied"));
                     return false;
                 }
             }
@@ -51,7 +59,7 @@ public class LBCommandExecutor implements Listener, CommandExecutor
             {
                 if(args[0].equalsIgnoreCase("setspawn"))
                 {
-                    if(sender.isOp())
+                    if(sender.hasPermission("logback.setspawn"))
                     {
                         try
                         {
