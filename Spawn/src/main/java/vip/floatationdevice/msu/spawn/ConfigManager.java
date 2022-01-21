@@ -23,5 +23,10 @@ public class ConfigManager
     static boolean useMinecraftSpawnPoint(){return cfg.getBoolean("useMinecraftSpawnPoint");}
     static int getCooldownSec(){return cfg.getInt("cooldown.sec");}
     static int getWarmupSec(){return cfg.getInt("warmup.sec");}
-
+    static boolean[] getInterruptors(){return new boolean[]{
+            cfg.getBoolean("interruptBy.move"),
+            cfg.getBoolean("interruptBy.message"),
+            cfg.getBoolean("interruptBy.interact"),
+            cfg.getBoolean("interruptBy.damage"),
+    };}
 }

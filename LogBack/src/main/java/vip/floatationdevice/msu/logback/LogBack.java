@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -47,10 +48,28 @@ public final class LogBack extends JavaPlugin implements Listener
     @Override
     public void onDisable()
     {
-        // nothing to do
+        // save all players' location
+        log.info("Saving all players' location");
+        int count=0;
+        for(Player p:getServer().getOnlinePlayers())
+        {
+            Location loc=p.getLocation();
+            try
+            {
+                DataManager.writeLocation(p,loc,false);
+                count++;
+            }
+            catch(Exception e)
+            {
+                log.severe(translate("err-write-location-fail")
+                        .replace("{0}",p.getName())
+                        .replace("{1}",e.toString()));
+            }
+        }
+        log.info("Saving complete, "+count+" players' location saved");
     }
 
-    @EventHandler
+    @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerLeave(PlayerQuitEvent e)
     {
         if(!ConfigManager.useMinecraftSpawnPoint() && !DataManager.isSpawnSet())
@@ -88,7 +107,7 @@ public final class LogBack extends JavaPlugin implements Listener
         p.teleport(spawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
-    @EventHandler
+    @EventHandler(priority=EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent e)
     {
         if(!ConfigManager.useMinecraftSpawnPoint() && !DataManager.isSpawnSet())
@@ -100,6 +119,7 @@ public final class LogBack extends JavaPlugin implements Listener
         Location spawn;
         if(!DataManager.isRecorded(p.getUniqueId()))
         {
+            log.info(p.getName()+" doesn't have a logout location");
             try
             {
                 spawn=DataManager.readSpawnLocation();
